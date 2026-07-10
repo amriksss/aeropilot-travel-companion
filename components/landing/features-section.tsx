@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { gsap, useReducedMotion } from '@/lib/use-gsap'
@@ -46,91 +46,64 @@ const FEATURES = [
 
 export function FeaturesSection() {
   const sectionRef = useRef<HTMLElement>(null)
-  const slidesContainerRef = useRef<HTMLDivElement>(null)
-  const progressRef = useRef<HTMLDivElement>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
-    if (!sectionRef.current || !slidesContainerRef.current) return
+    if (!sectionRef.current || reducedMotion) return
 
     const ctx = gsap.context(() => {
-      const totalSlides = FEATURES.length
-      const slides = slidesContainerRef.current!.children
+      const rows = gsap.utils.toArray<HTMLElement>('.feature-row')
 
-      if (reducedMotion) {
-        Array.from(slides).forEach((slide) => {
-          gsap.from(slide, {
-            opacity: 0,
-            y: 40,
-            duration: 0.6,
-            scrollTrigger: {
-              trigger: slide as Element,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          })
-        })
-        return
-      }
+      rows.forEach((row) => {
+        const media = row.querySelector('.feature-media')
+        const copyItems = row.querySelectorAll('.feature-copy > *')
+        const img = row.querySelector('.feature-image')
 
-      // Pin the section and scrub through slides — higher scrub value for silkier catch-up
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          pin: true,
-          scrub: 1.8,
-          start: 'top top',
-          end: () => `+=${window.innerHeight * totalSlides}`,
-          onUpdate: (self) => {
-            const idx = Math.min(
-              Math.floor(self.progress * totalSlides),
-              totalSlides - 1
-            )
-            setActiveIndex(idx)
-
-            if (progressRef.current) {
-              progressRef.current.style.setProperty(
-                '--progress',
-                String(self.progress)
-              )
-            }
+        // Reveal: image and copy ease in as the row enters the viewport
+        gsap.from(media, {
+          opacity: 0,
+          y: 60,
+          duration: 1.4,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row,
+            start: 'top 78%',
+            toggleActions: 'play none none none',
           },
-        },
-      })
+        })
 
-      for (let i = 0; i < totalSlides; i++) {
-        const slide = slides[i] as HTMLElement
-        if (!slide) continue
+        gsap.from(copyItems, {
+          opacity: 0,
+          y: 34,
+          duration: 1.1,
+          stagger: 0.09,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: row,
+            start: 'top 74%',
+            toggleActions: 'play none none none',
+          },
+        })
 
-        if (i > 0) {
-          tl.fromTo(
-            slide,
-            { opacity: 0, y: 50, scale: 0.985 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' },
-            i
-          )
-        }
-
-        if (i < totalSlides - 1) {
-          tl.to(
-            slide,
-            { opacity: 0, y: -50, scale: 0.985, duration: 0.55, ease: 'power2.in' },
-            i + 0.72
-          )
-        }
-
-        // Gentle parallax on the image inside the slide
-        const img = slide.querySelector('.feature-image')
+        // Gentle parallax on the image while the row moves through the viewport
         if (img) {
-          tl.fromTo(
+          gsap.fromTo(
             img,
-            { y: '10%', scale: 1.06 },
-            { y: '-10%', scale: 1, duration: 1, ease: 'none' },
-            i
+            { y: '-6%', scale: 1.08 },
+            {
+              y: '6%',
+              scale: 1.08,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: row,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.2,
+              },
+            }
           )
         }
-      }
+      })
     }, sectionRef)
 
     return () => ctx.revert()
@@ -160,143 +133,127 @@ export function FeaturesSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-dark relative overflow-hidden"
-      style={{ minHeight: '100vh' }}
+      className="section-dark relative overflow-hidden py-28 md:py-40"
     >
-      <div className="relative z-10 h-screen flex flex-col">
-        {/* Top micro-label */}
-        <div className="pt-20 px-6 md:px-12 lg:px-20 flex items-center gap-6">
-          <p className="micro-label" style={{ color: '#C9A96A' }}>
-            CAPABILITIES
-          </p>
-          <div className="gold-hairline flex-1 max-w-xs" aria-hidden="true" />
-        </div>
+      {/* Section header */}
+      <div className="px-6 md:px-12 lg:px-20 flex items-center gap-6 mb-20 md:mb-28">
+        <p className="micro-label" style={{ color: '#C9A96A' }}>
+          CAPABILITIES
+        </p>
+        <div className="gold-hairline flex-1 max-w-xs" aria-hidden="true" />
+      </div>
 
-        {/* Slides container */}
-        <div ref={slidesContainerRef} className="flex-1 relative">
-          {FEATURES.map((feature, i) => (
+      {/* Feature rows */}
+      <div className="flex flex-col gap-28 md:gap-44">
+        {FEATURES.map((feature, i) => (
+          <div
+            key={feature.id}
+            className="feature-row px-6 md:px-12 lg:px-20"
+          >
             <div
-              key={feature.id}
-              className={`absolute inset-0 flex items-center px-6 md:px-12 lg:px-20 ${
-                reducedMotion
-                  ? 'relative position-static mb-24'
-                  : i === 0
-                  ? ''
-                  : 'opacity-0'
-              }`}
-              style={
-                reducedMotion
-                  ? { position: 'relative', height: 'auto', minHeight: '80vh' }
-                  : {}
-              }
+              className={`w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}
             >
-              <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-                {/* Media card - left */}
-                <div className="lg:col-span-6">
-                  <div
-                    className="tilt-card relative"
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    data-cursor-label="explore"
-                  >
-                    <div className="tilt-card-inner corner-marks">
-                      <div className="aspect-[4/5] md:aspect-[3/4] relative overflow-hidden">
-                        <Image
-                          src={feature.image}
-                          alt={feature.title.replace('\n', ' ')}
-                          fill
-                          className="feature-image object-cover"
-                          style={{ willChange: 'transform' }}
-                        />
-                        {/* Soft vignette for depth */}
-                        <div
-                          className="absolute inset-0 pointer-events-none"
-                          style={{
-                            background:
-                              'linear-gradient(to top, rgba(10,9,8,0.55) 0%, transparent 40%)',
-                          }}
-                          aria-hidden="true"
-                        />
-                      </div>
+              {/* Media card */}
+              <div
+                className={`lg:col-span-6 ${
+                  i % 2 === 1 ? 'lg:order-2' : ''
+                }`}
+              >
+                <div
+                  className="feature-media tilt-card relative max-w-xl mx-auto lg:mx-0"
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                  data-cursor-label="explore"
+                >
+                  <div className="tilt-card-inner corner-marks">
+                    <div className="aspect-[4/5] md:aspect-[3/4] relative overflow-hidden">
+                      <Image
+                        src={feature.image}
+                        alt={feature.title.replace('\n', ' ')}
+                        fill
+                        className="feature-image object-cover"
+                        style={{ willChange: 'transform' }}
+                      />
+                      {/* Soft vignette for depth */}
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background:
+                            'linear-gradient(to top, rgba(10,9,8,0.55) 0%, transparent 40%)',
+                        }}
+                        aria-hidden="true"
+                      />
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Info column - right */}
-                <div className="lg:col-span-6 flex flex-col gap-7">
-                  {/* Index */}
-                  <span
-                    className="serif-accent text-2xl"
-                    style={{ color: '#C9A96A' }}
-                  >
-                    No. {feature.id}
-                  </span>
+              {/* Info column */}
+              <div
+                className={`feature-copy lg:col-span-6 flex flex-col gap-6 md:gap-7 ${
+                  i % 2 === 1 ? 'lg:order-1' : ''
+                }`}
+              >
+                {/* Index */}
+                <span
+                  className="serif-accent text-2xl"
+                  style={{ color: '#C9A96A' }}
+                >
+                  No. {feature.id}
+                </span>
 
-                  {/* Title */}
-                  <h3
-                    className="whitespace-pre-line text-balance"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(2.5rem, 5.5vw, 5.5rem)',
-                      fontWeight: 500,
-                      lineHeight: 1,
-                      color: '#F4F1EA',
-                    }}
-                  >
-                    {feature.title}
-                  </h3>
+                {/* Title */}
+                <h3
+                  className="whitespace-pre-line text-balance"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(2.5rem, 4.5vw, 4.75rem)',
+                    fontWeight: 500,
+                    lineHeight: 1,
+                    color: '#F4F1EA',
+                  }}
+                >
+                  {feature.title}
+                </h3>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-3">
-                    {feature.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="micro-label pb-1"
-                        style={{
-                          color: '#8A8378',
-                          borderBottom: '1px solid rgba(201, 169, 106, 0.35)',
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Description */}
-                  <p
-                    className="text-base md:text-lg leading-relaxed max-w-md"
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      color: '#F4F1EA',
-                      opacity: 0.72,
-                      fontWeight: 300,
-                    }}
-                  >
-                    {feature.description}
-                  </p>
-
-                  {/* CTA Button */}
-                  <Link href={feature.href} className="editorial-btn self-start">
-                    <span>EXPLORE FEATURE</span>
-                    <span className="arrow">↗</span>
-                  </Link>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-3">
+                  {feature.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="micro-label pb-1"
+                      style={{
+                        color: '#8A8378',
+                        borderBottom: '1px solid rgba(201, 169, 106, 0.35)',
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
+
+                {/* Description */}
+                <p
+                  className="text-base md:text-lg leading-relaxed max-w-md"
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    color: '#F4F1EA',
+                    opacity: 0.72,
+                    fontWeight: 300,
+                  }}
+                >
+                  {feature.description}
+                </p>
+
+                {/* CTA Button */}
+                <Link href={feature.href} className="editorial-btn self-start">
+                  <span>EXPLORE FEATURE</span>
+                  <span className="arrow">↗</span>
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Bottom: counter + progress */}
-        <div className="px-6 md:px-12 lg:px-20 pb-8 flex items-center gap-6">
-          <span
-            className="micro-label"
-            style={{ color: '#8A8378' }}
-          >
-            {String(activeIndex + 1).padStart(2, '0')} — {String(FEATURES.length).padStart(2, '0')}
-          </span>
-
-          <div ref={progressRef} className="scroll-progress-bar flex-1" />
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   )
