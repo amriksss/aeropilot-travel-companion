@@ -195,13 +195,15 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* 3D globe — under the text, rising from the bottom of the hero */}
+      {/* Spacer reserving room for the globe at the bottom of the hero */}
+      <div className="h-[34vh] md:h-[38vh] w-full" aria-hidden="true" />
+
+      {/* 3D globe — under the text, anchored to the hero's bottom edge */}
       <div
-        ref={globeRef}
-        className="relative z-0 w-full flex justify-center -mt-6 md:-mt-10 pointer-events-none"
+        className="absolute z-0 left-1/2 bottom-0 -translate-x-1/2 translate-y-[48%] w-[120vw] max-w-[820px] aspect-square pointer-events-none"
         aria-hidden="true"
       >
-        <div className="w-[120vw] max-w-[820px] aspect-square -mb-[52%] md:-mb-[46%]">
+        <div ref={globeRef} className="w-full h-full">
           <HeroScene />
         </div>
       </div>
