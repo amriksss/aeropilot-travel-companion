@@ -295,6 +295,9 @@ Rules:
         if (message.includes('credit card') || message.includes('unauthenticated')) {
           return 'The AI Gateway is not set up yet for this project. Free credits need to be unlocked on the Vercel team before the copilot can respond.'
         }
+        if (message.toLowerCase().includes('quota') || message.includes('429')) {
+          return 'Quota reached. Please try again later.'
+        }
         return 'The AI model could not be reached. Please try again.'
       },
       onEnd: async ({ messages: finalMessages }) => {
