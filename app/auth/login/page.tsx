@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { SectionLabel } from '@/components/section-label'
+import { PageReveal } from '@/components/page-reveal'
 
 export default function Page() {
   const [email, setEmail] = useState('')
@@ -54,20 +54,44 @@ export default function Page() {
   }
 
   return (
-    <main className="flex min-h-svh w-full items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-md border border-border bg-card p-6">
-        <SectionLabel>AeroPilot Access</SectionLabel>
-        <h1 className="mt-2 text-2xl font-semibold">Log in</h1>
+    <main className="relative flex min-h-svh w-full items-center justify-center overflow-hidden p-6">
+      {/* Champagne horizon glow */}
+      <div
+        className="pointer-events-none absolute left-1/2 bottom-[-40%] h-[70vh] w-[110vw] -translate-x-1/2 rounded-full"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(201,169,106,0.09) 0%, transparent 62%)',
+        }}
+        aria-hidden="true"
+      />
 
-        {/* Google OAuth */}
-        <div className="mt-6">
+      <PageReveal className="w-full max-w-md">
+        <div data-reveal className="text-center">
+          <p className="micro-label" style={{ color: '#C9A96A' }}>
+            AEROPILOT ACCESS
+          </p>
+          <h1
+            className="mt-3 text-balance"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2.25rem, 4vw, 3rem)',
+              fontWeight: 500,
+              color: '#F4F1EA',
+              lineHeight: 1.05,
+            }}
+          >
+            Welcome <em style={{ color: '#C9A96A' }}>aboard</em>
+          </h1>
+        </div>
+
+        <div data-reveal className="liquid-glass mt-8 p-8">
           <button
             type="button"
             onClick={handleGoogleLogin}
             disabled={isGoogleLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-sm border border-border bg-background px-4 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+            className="editorial-btn w-full justify-center"
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
                 fill="#4285F4"
@@ -85,68 +109,80 @@ export default function Page() {
                 fill="#EA4335"
               />
             </svg>
-            {isGoogleLoading ? 'Redirecting...' : 'Sign in with Google'}
+            <span>{isGoogleLoading ? 'REDIRECTING...' : 'CONTINUE WITH GOOGLE'}</span>
           </button>
+
+          <div className="my-6 flex items-center gap-4">
+            <div className="h-px flex-1" style={{ background: 'rgba(138,131,120,0.25)' }} />
+            <span className="micro-label" style={{ color: '#8A8378' }}>
+              OR
+            </span>
+            <div className="h-px flex-1" style={{ background: 'rgba(138,131,120,0.25)' }} />
+          </div>
+
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email" className="micro-label" style={{ color: '#8A8378' }}>
+                EMAIL
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="traveller@example.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="lux-input"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="password" className="micro-label" style={{ color: '#8A8378' }}>
+                PASSWORD
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="lux-input"
+              />
+            </div>
+            {error && (
+              <p role="alert" className="text-sm" style={{ color: '#b3564e' }}>
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="editorial-btn editorial-btn--solid w-full justify-center disabled:opacity-50"
+            >
+              <span>{isLoading ? 'BOARDING...' : 'LOG IN'}</span>
+              {!isLoading && <span className="arrow">↗</span>}
+            </button>
+          </form>
         </div>
 
-        {/* Divider */}
-        <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-border" />
-          <span className="text-xs uppercase tracking-widest text-muted-foreground">or</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="email"
-              className="text-xs uppercase tracking-widest text-muted-foreground"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="pilot@example.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="rounded-sm border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="password"
-              className="text-xs uppercase tracking-widest text-muted-foreground"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="rounded-sm border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-            />
-          </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="rounded-sm bg-primary px-4 py-2.5 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {isLoading ? 'Logging in...' : 'Log in'}
-          </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
+        <p
+          data-reveal
+          className="mt-6 text-center text-sm"
+          style={{ fontFamily: 'var(--font-body)', color: '#8A8378' }}
+        >
           No account?{' '}
-          <Link href="/auth/sign-up" className="text-primary underline underline-offset-4">
+          <Link
+            href="/auth/sign-up"
+            className="underline underline-offset-4"
+            style={{ color: '#C9A96A' }}
+          >
             Sign up
           </Link>
+          {' · '}
+          <Link href="/" className="underline underline-offset-4" style={{ color: '#8A8378' }}>
+            Back home
+          </Link>
         </p>
-      </div>
+      </PageReveal>
     </main>
   )
 }
-

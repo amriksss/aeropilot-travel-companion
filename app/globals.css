@@ -347,7 +347,7 @@
   transform: translateX(0);
 }
 
-/* ─── LUXURY BUTTON ─── */
+/* ���── LUXURY BUTTON ─── */
 .editorial-btn {
   position: relative;
   display: inline-flex;
@@ -510,6 +510,40 @@
 .scramble-char {
   display: inline-block;
   transition: none;
+}
+
+/* ─── LUX FORM CONTROLS ─── */
+.lux-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: #F4F1EA;
+  background: rgba(244, 241, 234, 0.04);
+  border: 1px solid rgba(138, 131, 120, 0.25);
+  border-radius: 0.25rem;
+  outline: none;
+  transition: border-color 0.5s var(--ease-luxe), background 0.5s var(--ease-luxe);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.lux-input::placeholder {
+  color: #8A8378;
+}
+
+.lux-input:focus {
+  border-color: rgba(201, 169, 106, 0.6);
+  background: rgba(244, 241, 234, 0.06);
+}
+
+.lux-input:disabled {
+  opacity: 0.5;
+}
+
+select.lux-input option {
+  background: #100F0D;
+  color: #F4F1EA;
 }
 
 /* ─── LIQUID GLASS ─── */

@@ -1,23 +1,48 @@
 import Link from 'next/link'
-import { SectionLabel } from '@/components/section-label'
+import { PageReveal } from '@/components/page-reveal'
 
 export default function Page() {
   return (
-    <main className="flex min-h-svh w-full items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-md border border-border bg-card p-6 text-center">
-        <SectionLabel>Boarding pass issued</SectionLabel>
-        <h1 className="mt-2 text-2xl font-semibold">Check your email</h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          We sent you a confirmation link. Confirm your email, then log in to
-          start planning.
-        </p>
-        <Link
-          href="/auth/login"
-          className="mt-6 inline-block rounded-sm border border-border px-4 py-2 text-xs uppercase tracking-widest text-foreground transition-colors hover:border-primary hover:text-primary"
-        >
-          Back to login
-        </Link>
-      </div>
+    <main className="relative flex min-h-svh w-full items-center justify-center overflow-hidden p-6">
+      <div
+        className="pointer-events-none absolute left-1/2 bottom-[-40%] h-[70vh] w-[110vw] -translate-x-1/2 rounded-full"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(201,169,106,0.09) 0%, transparent 62%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <PageReveal className="w-full max-w-md">
+        <div data-reveal className="liquid-glass p-10 text-center">
+          <p className="micro-label" style={{ color: '#C9A96A' }}>
+            BOARDING PASS ISSUED
+          </p>
+          <h1
+            className="mt-4 text-balance"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2rem, 4vw, 2.75rem)',
+              fontWeight: 500,
+              color: '#F4F1EA',
+              lineHeight: 1.05,
+            }}
+          >
+            Check your <em style={{ color: '#C9A96A' }}>email</em>
+          </h1>
+          <p
+            className="mt-4 text-sm leading-relaxed"
+            style={{ fontFamily: 'var(--font-body)', color: '#8A8378' }}
+          >
+            We sent you a confirmation link. Confirm your email, then log in to
+            start planning your journeys.
+          </p>
+          <Link href="/auth/login" className="editorial-btn mt-8 inline-flex">
+            <span>BACK TO LOGIN</span>
+            <span className="arrow">↗</span>
+          </Link>
+        </div>
+      </PageReveal>
     </main>
   )
 }
