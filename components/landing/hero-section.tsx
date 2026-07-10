@@ -148,7 +148,7 @@ export function HeroSection() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center px-6 md:px-12 lg:px-20 py-28 lg:py-0">
+      <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center px-6 md:px-12 lg:px-20 py-28 lg:py-24">
         {/* Left — copy */}
         <div className="lg:col-span-6 flex flex-col justify-center">
           <p ref={labelRef} className="micro-label mb-8 text-champagne">
@@ -197,6 +197,14 @@ export function HeroSection() {
               <span className="arrow">↗</span>
             </Link>
           </div>
+
+          <div
+            ref={metaRef}
+            className="mt-14 micro-label"
+            style={{ color: '#8A8378' }}
+          >
+            LIVE DATA · OPENSKY NETWORK · 70+ AIRPORTS
+          </div>
         </div>
 
         {/* Right — 3D globe + luxury image card */}
@@ -233,14 +241,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom metadata */}
-      <div
-        ref={metaRef}
-        className="absolute bottom-8 left-6 md:left-12 lg:left-20 micro-label"
-        style={{ color: '#8A8378' }}
-      >
-        LIVE DATA · OPENSKY NETWORK · 70+ AIRPORTS
-      </div>
     </section>
   )
 }
