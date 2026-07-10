@@ -101,8 +101,8 @@ export function HeroSection() {
         if (globeRef.current) {
           tl.from(
             globeRef.current,
-            { opacity: 0, y: 60, scale: 0.94, duration: 2.2, ease: EASE },
-            0.4
+            { opacity: 0, duration: 2.4, ease: 'power2.inOut' },
+            0.3
           )
         }
 
@@ -122,20 +122,29 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="section-dark relative min-h-screen flex flex-col items-center overflow-hidden"
+      className="section-dark relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Clean radial glow behind the globe — the only background treatment */}
+      {/* 3D golden globe — full-viewport backdrop behind the text */}
       <div
-        className="absolute left-1/2 bottom-[-20%] -translate-x-1/2 w-[90vw] h-[90vw] max-w-[1100px] max-h-[1100px] rounded-full pointer-events-none"
+        ref={globeRef}
+        className="absolute inset-0 z-0 pointer-events-none"
+        aria-hidden="true"
+      >
+        <HeroScene />
+      </div>
+
+      {/* Soft radial glow rising from the horizon */}
+      <div
+        className="absolute left-1/2 bottom-[-30%] -translate-x-1/2 w-[110vw] h-[80vh] rounded-full pointer-events-none z-0"
         style={{
           background:
-            'radial-gradient(circle, rgba(201,169,106,0.08) 0%, transparent 60%)',
+            'radial-gradient(ellipse at center, rgba(201,169,106,0.1) 0%, transparent 62%)',
         }}
         aria-hidden="true"
       />
 
       {/* Centered copy — sits above the globe */}
-      <div className="relative z-10 w-full flex flex-col items-center text-center px-6 md:px-12 pt-32 md:pt-36">
+      <div className="relative z-10 w-full flex flex-col items-center text-center px-6 md:px-12 py-32 md:py-36">
         <p ref={labelRef} className="micro-label mb-8 text-champagne">
           AI-POWERED FLIGHT INTELLIGENCE
         </p>
@@ -195,18 +204,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Spacer reserving room for the globe at the bottom of the hero */}
-      <div className="h-[34vh] md:h-[38vh] w-full" aria-hidden="true" />
-
-      {/* 3D globe — under the text, anchored to the hero's bottom edge */}
-      <div
-        className="absolute z-0 left-1/2 bottom-0 -translate-x-1/2 translate-y-[48%] w-[120vw] max-w-[820px] aspect-square pointer-events-none"
-        aria-hidden="true"
-      >
-        <div ref={globeRef} className="w-full h-full">
-          <HeroScene />
-        </div>
-      </div>
     </section>
   )
 }
