@@ -30,6 +30,26 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
     lenisRef.current = lenis
 
+    // Keep the page pinned to the top while the preloader plays.
+    // Lenis hijacks wheel events, so body overflow:hidden alone can't stop it.
+    if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+
+    if (!(window as any).__aeroPreloaderDone) {
+      lenis.stop()
+    }
+
+    const onPreloaderDone = () => {
+      lenis.scrollTo(0, { immediate: true })
+      lenis.start()
+    }
+    window.addEventListener('aeropilot:preloader-done', onPreloaderDone)
+
+    // Safety net: never leave scrolling locked for more than 4s
+    const failsafe = setTimeout(onPreloaderDone, 4000)
+
     // Sync Lenis to GSAP ticker
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000)
@@ -46,6 +66,8 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
     return () => {
       clearTimeout(timer)
+      clearTimeout(failsafe)
+      window.removeEventListener('aeropilot:preloader-done', onPreloaderDone)
       lenis.destroy()
       lenisRef.current = null
     }

@@ -15,12 +15,18 @@ export function Preloader() {
     if (!containerRef.current) return
 
     document.body.style.overflow = 'hidden'
+    window.scrollTo(0, 0)
+
+    const finish = () => {
+      document.body.style.overflow = ''
+      window.scrollTo(0, 0)
+      ;(window as any).__aeroPreloaderDone = true
+      window.dispatchEvent(new Event('aeropilot:preloader-done'))
+      setVisible(false)
+    }
 
     if (reducedMotion) {
-      const timer = setTimeout(() => {
-        document.body.style.overflow = ''
-        setVisible(false)
-      }, 400)
+      const timer = setTimeout(finish, 400)
       return () => {
         clearTimeout(timer)
         document.body.style.overflow = ''
@@ -29,10 +35,7 @@ export function Preloader() {
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.style.overflow = ''
-          setVisible(false)
-        },
+        onComplete: finish,
       })
 
       // Wordmark fades up softly
