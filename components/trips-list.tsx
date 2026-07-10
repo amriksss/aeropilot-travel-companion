@@ -37,8 +37,8 @@ export function TripsList() {
 
   if (isLoading) {
     return (
-      <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-        Loading trips...
+      <p className="micro-label animate-pulse" style={{ color: '#8A8378' }}>
+        LOADING TRIPS...
       </p>
     )
   }
@@ -47,8 +47,11 @@ export function TripsList() {
 
   if (trips.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-border p-8 text-center">
-        <p className="text-sm text-muted-foreground">
+      <div className="liquid-glass p-10 text-center">
+        <p
+          className="text-sm leading-relaxed"
+          style={{ fontFamily: 'var(--font-body)', color: '#8A8378' }}
+        >
           No saved trips yet. Search flights on the dashboard or ask the AI
           companion to save an itinerary for you.
         </p>
@@ -60,27 +63,45 @@ export function TripsList() {
     <ul className="flex flex-col gap-4">
       {trips.map((trip) => (
         <li key={trip.id}>
-          <article className="rounded-md border border-border bg-card p-4">
+          <article className="liquid-glass p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
-                <h2 className="font-semibold text-balance">{trip.title}</h2>
-                <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                  {trip.trip_type} · saved{' '}
+                <h2
+                  className="text-balance"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '1.375rem',
+                    fontWeight: 500,
+                    color: '#F4F1EA',
+                  }}
+                >
+                  {trip.title}
+                </h2>
+                <p className="micro-label" style={{ color: '#8A8378' }}>
+                  {trip.trip_type.toUpperCase()} · SAVED{' '}
                   {new Date(trip.created_at).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 {trip.total_price != null && (
-                  <span className="font-mono text-lg font-semibold text-primary">
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '1.375rem',
+                      fontWeight: 500,
+                      color: '#C9A96A',
+                    }}
+                  >
                     ${Number(trip.total_price).toLocaleString()}
                   </span>
                 )}
                 <button
                   type="button"
                   onClick={() => remove(trip.id)}
-                  className="rounded-sm border border-border px-3 py-1.5 text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:border-destructive hover:text-destructive"
+                  className="editorial-btn px-3 py-1.5 transition-colors hover:border-destructive hover:text-destructive"
+                  style={{ fontSize: '0.5625rem', color: '#8A8378' }}
                 >
-                  Delete
+                  <span>DELETE</span>
                 </button>
               </div>
             </div>
@@ -88,7 +109,8 @@ export function TripsList() {
               {trip.segments.map((s, i) => (
                 <li
                   key={i}
-                  className="flex flex-wrap items-center gap-2 font-mono text-sm"
+                  className="flex flex-wrap items-center gap-2 text-sm"
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   <span className="text-primary">{s.origin}</span>
                   <span className="text-muted-foreground" aria-hidden="true">

@@ -89,11 +89,7 @@ export function FlightSearch({
     <div className="flex flex-col gap-4">
       <form
         onSubmit={search}
-        className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5"
-        style={{
-          border: '1px solid rgba(138, 138, 133, 0.15)',
-          background: 'rgba(232, 230, 225, 0.03)',
-        }}
+        className="liquid-glass grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 lg:grid-cols-5"
       >
         <AirportInput label="From" value={origin} onChange={setOrigin} />
         <AirportInput label="To" value={destination} onChange={setDestination} />
@@ -101,7 +97,7 @@ export function FlightSearch({
           <label
             htmlFor="depart-date"
             className="micro-label"
-            style={{ color: '#8A8A85' }}
+            style={{ color: '#8A8378' }}
           >
             DEPART
           </label>
@@ -111,20 +107,14 @@ export function FlightSearch({
             min={today}
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className={inputClass}
-            style={{
-              fontFamily: 'var(--font-body)',
-              background: '#0C0C0C',
-              color: '#E8E6E1',
-              border: '1px solid rgba(138, 138, 133, 0.2)',
-            }}
+            className="lux-input"
           />
         </div>
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="cabin-class"
             className="micro-label"
-            style={{ color: '#8A8A85' }}
+            style={{ color: '#8A8378' }}
           >
             CABIN
           </label>
@@ -132,13 +122,7 @@ export function FlightSearch({
             id="cabin-class"
             value={cabin}
             onChange={(e) => setCabin(e.target.value as CabinClass)}
-            className={inputClass}
-            style={{
-              fontFamily: 'var(--font-body)',
-              background: '#0C0C0C',
-              color: '#E8E6E1',
-              border: '1px solid rgba(138, 138, 133, 0.2)',
-            }}
+            className="lux-input"
           >
             <option value="economy">Economy</option>
             <option value="premium">Premium</option>
@@ -150,13 +134,8 @@ export function FlightSearch({
           <button
             type="submit"
             disabled={loading}
-            className="editorial-btn w-full justify-center disabled:opacity-50"
-            style={{
-              background: '#E0201C',
-              color: '#E8E6E1',
-              borderColor: '#E0201C',
-              fontSize: '0.625rem',
-            }}
+            className="editorial-btn editorial-btn--solid w-full justify-center disabled:opacity-50"
+            style={{ fontSize: '0.625rem' }}
           >
             <span>{loading ? 'SCANNING...' : 'SEARCH'}</span>
             {!loading && <span className="arrow">↗</span>}
@@ -165,14 +144,14 @@ export function FlightSearch({
       </form>
 
       {error && (
-        <p role="alert" className="text-sm" style={{ color: '#ef4444' }}>
+        <p role="alert" className="text-sm" style={{ color: '#b3564e' }}>
           {error}
         </p>
       )}
 
       {offers && (
         <div className="flex flex-col gap-3" aria-live="polite">
-          <p className="micro-label" style={{ color: '#8A8A85' }}>
+          <p className="micro-label" style={{ color: '#C9A96A' }}>
             {offers.length} ROUTES FOUND · SORTED BY PRICE
           </p>
           {offers.map((o) => (
@@ -186,7 +165,7 @@ export function FlightSearch({
             />
           ))}
           {offers.length === 0 && (
-            <p style={{ fontFamily: 'var(--font-body)', color: '#8A8A85', fontSize: '0.875rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', color: '#8A8378', fontSize: '0.875rem' }}>
               No routes found between these airports.
             </p>
           )}

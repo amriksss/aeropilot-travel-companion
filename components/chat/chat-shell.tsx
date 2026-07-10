@@ -40,18 +40,19 @@ export function ChatShell({ initialConversationId }: { initialConversationId: st
         aria-label="Conversations"
         className={`${
           sidebarOpen ? 'flex' : 'hidden'
-        } absolute z-30 h-full w-64 flex-col border-r border-border bg-background md:static md:flex`}
+        } liquid-glass-bar absolute z-30 h-full w-64 flex-col border-r border-border md:static md:flex`}
       >
         <div className="flex items-center justify-between border-b border-border p-3">
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Conversations
+          <span className="micro-label" style={{ color: '#8A8378' }}>
+            CONVERSATIONS
           </span>
           <button
             type="button"
             onClick={newConversation}
-            className="rounded-sm border border-border px-2 py-1 text-xs uppercase tracking-widest text-foreground hover:border-primary hover:text-primary"
+            className="editorial-btn px-2 py-1"
+            style={{ fontSize: '0.5625rem', borderColor: 'rgba(201, 169, 106, 0.3)' }}
           >
-            New
+            <span>NEW</span>
           </button>
         </div>
         <ul className="flex-1 overflow-y-auto p-2">
@@ -63,11 +64,12 @@ export function ChatShell({ initialConversationId }: { initialConversationId: st
                   setActiveId(c.id)
                   setSidebarOpen(false)
                 }}
-                className={`w-full truncate rounded-sm px-3 py-2 text-left text-sm transition-colors ${
+                className={`w-full truncate rounded-sm px-3 py-2 text-left text-sm transition-colors duration-500 ${
                   c.id === activeId
-                    ? 'bg-secondary text-primary'
+                    ? 'bg-accent text-primary'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
+                style={{ fontFamily: 'var(--font-body)' }}
               >
                 {c.title || 'New conversation'}
               </button>
@@ -82,15 +84,16 @@ export function ChatShell({ initialConversationId }: { initialConversationId: st
             type="button"
             onClick={() => setSidebarOpen((v) => !v)}
             aria-expanded={sidebarOpen}
-            className="rounded-sm border border-border px-3 py-1 text-xs uppercase tracking-widest text-muted-foreground"
+            className="editorial-btn px-3 py-1"
+            style={{ fontSize: '0.5625rem', color: '#8A8378' }}
           >
-            {sidebarOpen ? 'Close' : 'History'}
+            <span>{sidebarOpen ? 'CLOSE' : 'HISTORY'}</span>
           </button>
         </div>
         {messagesLoading ? (
           <div className="flex flex-1 items-center justify-center">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              Loading conversation...
+            <p className="micro-label animate-pulse" style={{ color: '#8A8378' }}>
+              LOADING CONVERSATION...
             </p>
           </div>
         ) : (

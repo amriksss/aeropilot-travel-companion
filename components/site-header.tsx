@@ -74,7 +74,7 @@ function ScrambleNavLink({
       href={href}
       className="editorial-link px-3 py-1.5 micro-label transition-colors"
       style={{
-        color: active ? '#E0201C' : '#8A8A85',
+        color: active ? '#C9A96A' : '#8A8378',
       }}
       onMouseEnter={scramble}
       onMouseLeave={reset}
@@ -106,10 +106,9 @@ export function SiteHeader() {
 
   return (
     <header
-      className="sticky top-0 z-50 backdrop-blur-sm"
+      className="liquid-glass-bar sticky top-0 z-50"
       style={{
-        background: 'rgba(12, 12, 12, 0.92)',
-        borderBottom: '1px solid rgba(138, 138, 133, 0.15)',
+        borderBottom: '1px solid rgba(201, 169, 106, 0.18)',
       }}
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4">
@@ -139,8 +138,8 @@ export function SiteHeader() {
               className="editorial-btn py-1.5 px-3"
               style={{
                 fontSize: '0.625rem',
-                color: '#8A8A85',
-                borderColor: 'rgba(138, 138, 133, 0.2)',
+                color: '#8A8378',
+                borderColor: 'rgba(201, 169, 106, 0.25)',
               }}
             >
               <span>SIGN OUT</span>
@@ -150,19 +149,14 @@ export function SiteHeader() {
               <Link
                 href="/auth/login"
                 className="editorial-link px-3 py-1.5 micro-label"
-                style={{ color: '#8A8A85' }}
+                style={{ color: '#8A8378' }}
               >
                 LOG IN
               </Link>
               <Link
                 href="/auth/sign-up"
-                className="editorial-btn py-1.5 px-3"
-                style={{
-                  fontSize: '0.625rem',
-                  color: '#E8E6E1',
-                  background: '#E0201C',
-                  borderColor: '#E0201C',
-                }}
+                className="editorial-btn editorial-btn--solid py-1.5 px-3"
+                style={{ fontSize: '0.625rem' }}
               >
                 <span>SIGN UP</span>
                 <span className="arrow">↗</span>
@@ -175,7 +169,7 @@ export function SiteHeader() {
       <nav
         aria-label="Mobile"
         className="flex items-center gap-1 overflow-x-auto px-2 py-1 md:hidden"
-        style={{ borderTop: '1px solid rgba(138, 138, 133, 0.15)' }}
+        style={{ borderTop: '1px solid rgba(201, 169, 106, 0.15)' }}
       >
         {NAV.map((item) => (
           <Link
@@ -183,7 +177,7 @@ export function SiteHeader() {
             href={item.href}
             className="whitespace-nowrap px-3 py-1 micro-label"
             style={{
-              color: pathname.startsWith(item.href) ? '#E0201C' : '#8A8A85',
+              color: pathname.startsWith(item.href) ? '#C9A96A' : '#8A8378',
             }}
           >
             {item.label}

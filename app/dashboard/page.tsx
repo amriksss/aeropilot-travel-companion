@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SiteHeader } from '@/components/site-header'
 import { DashboardGlobe } from '@/components/dashboard-globe'
+import { PageReveal } from '@/components/page-reveal'
 
 export const metadata = {
   title: 'Dashboard — AeroPilot',
@@ -23,36 +24,42 @@ export default async function DashboardPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8">
-        {/* Faint dot-matrix */}
-        <div className="pointer-events-none fixed inset-0 dot-matrix z-0" aria-hidden="true" />
+      <main className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10">
+        <PageReveal>
+          <div className="flex flex-col gap-2">
+            <p className="micro-label" style={{ color: '#C9A96A' }}>
+              FLIGHT DECK
+            </p>
+            <h1
+              className="text-balance"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(1.75rem, 4vw, 3.25rem)',
+                fontWeight: 500,
+                lineHeight: 1.05,
+                color: '#F4F1EA',
+              }}
+            >
+              Welcome back,{' '}
+              <em style={{ color: '#C9A96A' }}>{profile?.display_name ?? 'traveler'}</em>
+            </h1>
+            <div
+              className="h-px w-24"
+              style={{ background: 'rgba(201, 169, 106, 0.5)' }}
+              aria-hidden="true"
+            />
+            <p
+              className="mt-1 text-sm leading-relaxed"
+              style={{ fontFamily: 'var(--font-body)', color: '#8A8378' }}
+            >
+              Track live global air traffic and scan routes with AI-graded fares.
+            </p>
+          </div>
 
-        <div className="relative z-10 flex flex-col gap-1">
-          <p className="micro-label" style={{ color: '#E0201C' }}>
-            FLIGHT DECK
-          </p>
-          <h1
-            className="text-balance font-bold"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.5rem, 4vw, 3rem)',
-              lineHeight: 0.95,
-              color: '#E8E6E1',
-            }}
-          >
-            Welcome back, {profile?.display_name ?? 'traveler'}
-          </h1>
-          <p
-            className="mt-1 text-sm leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', color: '#8A8A85' }}
-          >
-            Track live global air traffic and scan routes with AI-graded fares.
-          </p>
-        </div>
-
-        <div className="relative z-10">
-          <DashboardGlobe homeAirport={profile?.home_airport} />
-        </div>
+          <div className="mt-6">
+            <DashboardGlobe homeAirport={profile?.home_airport} />
+          </div>
+        </PageReveal>
       </main>
     </>
   )

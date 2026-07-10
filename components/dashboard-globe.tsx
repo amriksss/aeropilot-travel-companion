@@ -49,32 +49,28 @@ export function DashboardGlobe({ homeAirport }: { homeAirport?: string | null })
     <div className="flex flex-col gap-6 lg:flex-row">
       <section
         aria-label="Live global air traffic"
-        className="corner-marks relative h-[420px] overflow-hidden lg:h-[560px] lg:w-1/2"
-        style={{
-          border: '1px solid rgba(138, 138, 133, 0.15)',
-          background: '#0C0C0C',
-        }}
+        className="corner-marks liquid-glass relative h-[420px] overflow-hidden lg:h-[560px] lg:w-1/2"
       >
         <GlobeCanvas aircraft={aircraft} routes={routes} />
         <div className="pointer-events-none absolute left-4 top-4 flex flex-col gap-1">
-          <p className="micro-label" style={{ color: '#8A8A85' }}>
+          <p className="micro-label" style={{ color: '#C9A96A' }}>
             {data?.simulated
               ? 'AIR TRAFFIC · SIMULATED FEED'
               : 'LIVE AIR TRAFFIC · OPENSKY NETWORK'}
           </p>
           <p className="flex items-baseline gap-2">
             <span
-              className="font-bold"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '2rem',
+                fontWeight: 500,
                 lineHeight: 1,
-                color: '#E8E6E1',
+                color: '#F4F1EA',
               }}
             >
               {isLoading ? '—' : aircraft.length.toLocaleString()}
             </span>
-            <span className="micro-label" style={{ color: '#8A8A85' }}>
+            <span className="micro-label" style={{ color: '#8A8378' }}>
               AIRCRAFT TRACKED
             </span>
           </p>
@@ -82,18 +78,15 @@ export function DashboardGlobe({ homeAirport }: { homeAirport?: string | null })
         {/* Route indicator */}
         {route && (
           <div
-            className="pointer-events-auto absolute bottom-4 left-4 flex items-center gap-3 px-3 py-2 backdrop-blur-sm"
-            style={{
-              border: '1px solid rgba(224, 32, 28, 0.4)',
-              background: 'rgba(12, 12, 12, 0.8)',
-            }}
+            className="glass-pill pointer-events-auto absolute bottom-4 left-4"
+            style={{ padding: '0.5rem 0.875rem' }}
           >
             <p
-              className="font-bold"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '0.875rem',
-                color: '#E0201C',
+                fontSize: '0.9375rem',
+                fontWeight: 500,
+                color: '#C9A96A',
               }}
             >
               {route.origin} → {route.destination}
@@ -101,8 +94,8 @@ export function DashboardGlobe({ homeAirport }: { homeAirport?: string | null })
             <button
               type="button"
               onClick={() => setRoute(null)}
-              className="micro-label transition-colors hover:text-foreground"
-              style={{ color: '#8A8A85' }}
+              className="micro-label transition-colors"
+              style={{ color: '#8A8378' }}
             >
               CLEAR ✕
             </button>

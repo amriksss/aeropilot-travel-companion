@@ -34,8 +34,8 @@ export function AeropilotLogo({
   }, [])
 
   const dim = size === 'lg' ? 40 : 20
-  const strokeColor = light ? '#0C0C0C' : '#E0201C'
-  const textColor = light ? '#0C0C0C' : '#E8E6E1'
+  const strokeColor = light ? '#0A0908' : '#C9A96A'
+  const textColor = light ? '#0A0908' : '#F4F1EA'
 
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>

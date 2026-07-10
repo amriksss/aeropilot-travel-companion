@@ -26,76 +26,64 @@ export function FlightCard({
   const last = offer.legs[offer.legs.length - 1]
 
   return (
-    <article
-      className="p-4"
-      style={{
-        border: '1px solid rgba(138, 138, 133, 0.15)',
-        background: 'rgba(232, 230, 225, 0.03)',
-      }}
-    >
+    <article className="liquid-glass p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="micro-label" style={{ color: '#8A8A85' }}>
-            {first.airline}{' '}
+        <div className="flex flex-col gap-1.5">
+          <p className="micro-label" style={{ color: '#8A8378' }}>
+            {offer.legs[0].airline}{' '}
             <span style={{ fontFamily: 'var(--font-body)' }}>
               {offer.legs.map((l) => l.flightNumber).join(' · ')}
             </span>
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="flex flex-col">
               <span
-                className="font-bold"
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '1.25rem',
+                  fontSize: '1.5rem',
+                  fontWeight: 500,
                   lineHeight: 1,
-                  color: '#E8E6E1',
+                  color: '#F4F1EA',
                 }}
               >
                 {timeOf(first.departTime)}
               </span>
               <span
-                className="font-bold"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '0.75rem',
-                  color: '#8A8A85',
-                }}
+                className="micro-label mt-1"
+                style={{ color: '#8A8378', fontSize: '0.625rem' }}
               >
                 {offer.origin}
               </span>
             </div>
             <div className="flex flex-col items-center px-1" aria-hidden="true">
-              <span className="micro-label" style={{ color: '#8A8A85', fontSize: '0.5625rem' }}>
+              <span className="micro-label" style={{ color: '#8A8378', fontSize: '0.5625rem' }}>
                 {formatDuration(offer.totalDurationMin)}
               </span>
-              <span
-                className="my-1 block h-px w-16"
-                style={{ background: 'rgba(138, 138, 133, 0.2)' }}
-              />
-              <span className="micro-label" style={{ color: '#8A8A85', fontSize: '0.5625rem' }}>
+              <span className="relative my-1.5 block h-px w-20" style={{ background: 'rgba(201, 169, 106, 0.35)' }}>
+                <span
+                  className="absolute -top-[2.5px] right-0 block size-[5px] rounded-full"
+                  style={{ background: '#C9A96A' }}
+                />
+              </span>
+              <span className="micro-label" style={{ color: '#8A8378', fontSize: '0.5625rem' }}>
                 {offer.stops === 0 ? 'NONSTOP' : `1 STOP ${offer.via ?? ''}`}
               </span>
             </div>
             <div className="flex flex-col">
               <span
-                className="font-bold"
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '1.25rem',
+                  fontSize: '1.5rem',
+                  fontWeight: 500,
                   lineHeight: 1,
-                  color: '#E8E6E1',
+                  color: '#F4F1EA',
                 }}
               >
                 {timeOf(last.arriveTime)}
               </span>
               <span
-                className="font-bold"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '0.75rem',
-                  color: '#8A8A85',
-                }}
+                className="micro-label mt-1"
+                style={{ color: '#8A8378', fontSize: '0.625rem' }}
               >
                 {offer.destination}
               </span>
@@ -104,17 +92,17 @@ export function FlightCard({
         </div>
         <div className="flex flex-col items-end gap-1">
           <span
-            className="font-bold"
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '1.5rem',
+              fontSize: '1.75rem',
+              fontWeight: 500,
               lineHeight: 1,
-              color: '#E0201C',
+              color: '#C9A96A',
             }}
           >
             ${offer.price.toLocaleString()}
           </span>
-          <span className="micro-label" style={{ color: '#8A8A85', fontSize: '0.5625rem' }}>
+          <span className="micro-label" style={{ color: '#8A8378', fontSize: '0.5625rem' }}>
             {offer.cabin.toUpperCase()} · {offer.seatsLeft} SEATS LEFT
           </span>
         </div>
@@ -122,21 +110,21 @@ export function FlightCard({
 
       {(insight || onSave) && (
         <div
-          className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-3"
-          style={{ borderTop: '1px solid rgba(138, 138, 133, 0.1)' }}
+          className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-4"
+          style={{ borderTop: '1px solid rgba(201, 169, 106, 0.15)' }}
         >
           {insight ? (
             <span
-              className="inline-flex items-center gap-1.5 px-2 py-1 micro-label"
+              className="glass-pill micro-label"
               style={{
-                background: 'rgba(232, 230, 225, 0.05)',
-                color: '#8A8A85',
+                padding: '0.3rem 0.75rem',
+                color: '#C9A96A',
                 fontSize: '0.5625rem',
               }}
             >
               <span
-                className="size-1.5 rounded-full"
-                style={{ background: '#E0201C' }}
+                className="size-1.5 rounded-full animate-pulse-dot"
+                style={{ background: '#C9A96A' }}
                 aria-hidden="true"
               />
               AI INSIGHT: {insight.toUpperCase()}
@@ -152,11 +140,11 @@ export function FlightCard({
               className="editorial-btn py-1 px-3 disabled:opacity-50"
               style={{
                 fontSize: '0.5625rem',
-                color: '#E8E6E1',
-                borderColor: 'rgba(138, 138, 133, 0.2)',
+                color: saved ? '#C9A96A' : '#F4F1EA',
+                borderColor: 'rgba(201, 169, 106, 0.35)',
               }}
             >
-              <span>{saved ? 'SAVED' : saving ? 'SAVING...' : 'SAVE TRIP'}</span>
+              <span>{saved ? 'SAVED ✓' : saving ? 'SAVING...' : 'SAVE TRIP'}</span>
             </button>
           )}
         </div>

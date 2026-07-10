@@ -85,24 +85,42 @@ export function ChatPanel({
         <div className="mx-auto flex max-w-3xl flex-col gap-6">
           {messages.length === 0 && (
             <div className="flex flex-col gap-4 pt-8">
-              <p className="font-mono text-xs uppercase tracking-widest text-primary">
-                AI Travel Companion
+              <p className="micro-label" style={{ color: '#C9A96A' }}>
+                AI TRAVEL COMPANION
               </p>
-              <h2 className="text-xl font-semibold text-balance">
-                Where would you like to go?
+              <h2
+                className="text-balance"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                  fontWeight: 500,
+                  lineHeight: 1.1,
+                  color: '#F4F1EA',
+                }}
+              >
+                Where would you like to <em style={{ color: '#C9A96A' }}>go</em>?
               </h2>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <div
+                className="h-px w-20"
+                style={{ background: 'rgba(201, 169, 106, 0.5)' }}
+                aria-hidden="true"
+              />
+              <p
+                className="text-sm leading-relaxed"
+                style={{ fontFamily: 'var(--font-body)', color: '#8A8378' }}
+              >
                 I can search flights, compare direct vs connecting routes, scan
                 flexible dates, analyze seasonal pricing, and plan multi-city
                 itineraries — personalized to your preferences.
               </p>
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-2.5">
                 {SUGGESTIONS.map((s) => (
                   <li key={s}>
                     <button
                       type="button"
                       onClick={() => submit(s)}
-                      className="w-full rounded-md border border-border bg-card px-4 py-3 text-left text-sm text-foreground transition-colors hover:border-primary"
+                      className="liquid-glass w-full px-4 py-3 text-left text-sm transition-colors duration-500 hover:text-primary"
+                      style={{ fontFamily: 'var(--font-body)', color: '#F4F1EA' }}
                     >
                       {s}
                     </button>
@@ -122,14 +140,20 @@ export function ChatPanel({
                   return message.role === 'user' ? (
                     <p
                       key={i}
-                      className="max-w-[85%] rounded-md bg-primary px-4 py-2.5 text-sm leading-relaxed text-primary-foreground"
+                      className="max-w-[85%] rounded-md px-4 py-2.5 text-sm leading-relaxed"
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        background: 'linear-gradient(135deg, #C9A96A, #B8965A)',
+                        color: '#0A0908',
+                      }}
                     >
                       {part.text}
                     </p>
                   ) : (
                     <p
                       key={i}
-                      className="max-w-[92%] whitespace-pre-wrap text-sm leading-relaxed text-foreground"
+                      className="max-w-[92%] whitespace-pre-wrap text-sm leading-relaxed"
+                      style={{ fontFamily: 'var(--font-body)', color: '#F4F1EA' }}
                     >
                       {part.text}
                     </p>
@@ -148,9 +172,13 @@ export function ChatPanel({
           ))}
 
           {status === 'submitted' && (
-            <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              <span className="size-1.5 animate-pulse rounded-full bg-primary" aria-hidden="true" />
-              Thinking...
+            <p className="micro-label flex items-center gap-2" style={{ color: '#8A8378' }}>
+              <span
+                className="size-1.5 animate-pulse rounded-full"
+                style={{ background: '#C9A96A' }}
+                aria-hidden="true"
+              />
+              THINKING...
             </p>
           )}
           {(error || status === 'error') && (
@@ -171,7 +199,7 @@ export function ChatPanel({
         </div>
       </div>
 
-      <div className="border-t border-border bg-background px-4 py-3">
+      <div className="liquid-glass-bar border-t border-border px-4 py-3">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -198,14 +226,16 @@ export function ChatPanel({
             }}
             placeholder="Ask about flights, prices, or trip plans..."
             autoComplete="off"
-            className="flex-1 rounded-md border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+            className="lux-input flex-1"
           />
           <button
             type="submit"
             disabled={status !== 'ready' || !input.trim()}
-            className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="editorial-btn editorial-btn--solid px-5 py-2.5 disabled:opacity-50"
+            style={{ fontSize: '0.625rem' }}
           >
-            Send
+            <span>SEND</span>
+            <span className="arrow">↗</span>
           </button>
         </form>
       </div>

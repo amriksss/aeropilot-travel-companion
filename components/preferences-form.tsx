@@ -76,8 +76,7 @@ export function PreferencesForm({
     setMessage(error ? 'Could not save preferences.' : 'Preferences saved. The AI companion will use them.')
   }
 
-  const selectClass =
-    'rounded-sm border border-border bg-secondary px-3 py-2 font-mono text-sm text-foreground focus:border-primary focus:outline-none'
+  const selectClass = 'lux-input'
 
   return (
     <form onSubmit={save} className="flex flex-col gap-6">
@@ -85,7 +84,7 @@ export function PreferencesForm({
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="display-name"
-            className="text-xs uppercase tracking-widest text-muted-foreground"
+            className="micro-label text-muted-foreground"
           >
             Display name
           </label>
@@ -105,7 +104,7 @@ export function PreferencesForm({
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="seat-pref"
-            className="text-xs uppercase tracking-widest text-muted-foreground"
+            className="micro-label text-muted-foreground"
           >
             Seat preference
           </label>
@@ -124,7 +123,7 @@ export function PreferencesForm({
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="cabin-pref"
-            className="text-xs uppercase tracking-widest text-muted-foreground"
+            className="micro-label text-muted-foreground"
           >
             Default cabin
           </label>
@@ -143,7 +142,7 @@ export function PreferencesForm({
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="budget-pref"
-            className="text-xs uppercase tracking-widest text-muted-foreground"
+            className="micro-label text-muted-foreground"
           >
             Budget level
           </label>
@@ -172,7 +171,7 @@ export function PreferencesForm({
       </div>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-xs uppercase tracking-widest text-muted-foreground">
+        <legend className="micro-label text-muted-foreground">
           Preferred airlines
         </legend>
         <div className="flex flex-wrap gap-2">
@@ -184,11 +183,12 @@ export function PreferencesForm({
                 type="button"
                 aria-pressed={active}
                 onClick={() => toggleAirline(name)}
-                className={`rounded-sm border px-3 py-1.5 text-xs transition-colors ${
+                className={`rounded-full border px-4 py-1.5 text-xs transition-all duration-500 ${
                   active
-                    ? 'border-primary bg-secondary text-primary'
-                    : 'border-border text-muted-foreground hover:text-foreground'
+                    ? 'border-primary bg-accent text-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
                 }`}
+                style={{ fontFamily: 'var(--font-body)' }}
               >
                 {name}
               </button>
@@ -201,9 +201,11 @@ export function PreferencesForm({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-sm bg-primary px-6 py-2.5 text-sm font-semibold uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="editorial-btn editorial-btn--solid px-6 py-2.5 disabled:opacity-50"
+          style={{ fontSize: '0.625rem' }}
         >
-          {saving ? 'Saving...' : 'Save preferences'}
+          <span>{saving ? 'SAVING...' : 'SAVE PREFERENCES'}</span>
+          {!saving && <span className="arrow">↗</span>}
         </button>
         {message && (
           <p role="status" className="text-sm text-muted-foreground">
