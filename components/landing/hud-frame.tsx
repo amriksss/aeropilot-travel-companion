@@ -75,17 +75,17 @@ export function HudFrame() {
       {/* Top bar */}
       <div
         className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-3"
-        style={{ borderBottom: '1px solid rgba(138, 138, 133, 0.15)' }}
+        style={{ borderBottom: '1px solid rgba(201, 169, 106, 0.18)' }}
       >
-        <span className="hud-bar">2026</span>
-        <span className="hud-bar">AI TRAVEL INTELLIGENCE</span>
+        <span className="hud-bar">MMXXVI</span>
+        <span className="hud-bar" style={{ color: '#C9A96A' }}>PRIVATE FLIGHT INTELLIGENCE</span>
         <span className="hud-bar">AEROPILOT</span>
       </div>
 
       {/* Bottom bar */}
       <div
         className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-3"
-        style={{ borderTop: '1px solid rgba(138, 138, 133, 0.15)' }}
+        style={{ borderTop: '1px solid rgba(201, 169, 106, 0.18)' }}
       >
         <span className="hud-bar">v0.1.0</span>
         <nav className="flex items-center gap-6" style={{ pointerEvents: 'auto' }}>
@@ -103,7 +103,7 @@ export function HudFrame() {
       {/* Left vertical text */}
       <div className="absolute left-3 top-1/2 -translate-y-1/2 hidden lg:block">
         <span className="hud-vertical hud-vertical-left">
-          EXPLORE · DISCOVER · FLY
+          ELEVATED · REFINED · EFFORTLESS
         </span>
       </div>
 

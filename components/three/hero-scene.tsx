@@ -4,45 +4,100 @@ import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const ORANGE = '#f97316'
-const ORANGE_DIM = '#7c3a10'
+const GOLD = '#C9A96A'
+const GOLD_DIM = '#5b4c2e'
+const IVORY = '#F4F1EA'
 
-function WireGlobe() {
+/** Convert lat/lon (degrees) to a Vector3 on a sphere of radius r */
+function latLonToVec3(lat: number, lon: number, r: number) {
+  const phi = ((90 - lat) * Math.PI) / 180
+  const theta = ((lon + 180) * Math.PI) / 180
+  return new THREE.Vector3(
+    -r * Math.sin(phi) * Math.cos(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.sin(theta)
+  )
+}
+
+/** Great-circle-ish arc between two points, lifted above the sphere */
+function makeArc(a: THREE.Vector3, b: THREE.Vector3, r: number, segments = 64) {
+  const pts: THREE.Vector3[] = []
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments
+    const p = new THREE.Vector3().lerpVectors(a, b, t)
+    // Lift the midpoint outward for a graceful arc
+    const lift = 1 + 0.22 * Math.sin(Math.PI * t)
+    p.normalize().multiplyScalar(r * lift)
+    pts.push(p)
+  }
+  return new THREE.BufferGeometry().setFromPoints(pts)
+}
+
+// A curated set of "routes" between world hubs (lat, lon)
+const HUBS: [number, number][] = [
+  [40.64, -73.78], // JFK
+  [51.47, -0.45], // LHR
+  [25.25, 55.36], // DXB
+  [35.55, 139.78], // HND
+  [1.36, 103.99], // SIN
+  [-33.95, 151.18], // SYD
+  [48.86, 2.35], // CDG-ish
+  [34.05, -118.24], // LAX
+]
+
+const ROUTES: [number, number][] = [
+  [0, 1],
+  [1, 2],
+  [2, 4],
+  [4, 5],
+  [3, 4],
+  [0, 7],
+  [1, 6],
+  [2, 3],
+]
+
+function LuxGlobe() {
   const group = useRef<THREE.Group>(null)
   const pointer = useRef({ x: 0, y: 0 })
 
-  useFrame(({ pointer: p }, delta) => {
-    pointer.current.x += (p.x - pointer.current.x) * 0.05
-    pointer.current.y += (p.y - pointer.current.y) * 0.05
+  useFrame(({ pointer: p, clock }, delta) => {
+    // Very smooth pointer easing
+    pointer.current.x += (p.x - pointer.current.x) * 0.025
+    pointer.current.y += (p.y - pointer.current.y) * 0.025
     if (group.current) {
-      group.current.rotation.y += delta * 0.08
-      group.current.rotation.x = pointer.current.y * 0.15
-      group.current.rotation.z = pointer.current.x * 0.05
+      group.current.rotation.y += delta * 0.05
+      group.current.rotation.x = pointer.current.y * 0.1
+      group.current.rotation.z = pointer.current.x * 0.03
+      // Gentle breathing float
+      group.current.position.y = Math.sin(clock.elapsedTime * 0.4) * 0.06
     }
   })
 
-  const { latLines, lonLines } = useMemo(() => {
-    const R = 2
+  const R = 2
+
+  const { latLines, lonLines, arcs, hubPositions } = useMemo(() => {
     const lat: THREE.BufferGeometry[] = []
     const lon: THREE.BufferGeometry[] = []
-    // latitude rings
-    for (let i = -75; i <= 75; i += 15) {
+
+    // Latitude rings — sparse and fine
+    for (let i = -60; i <= 60; i += 30) {
       const phi = (i * Math.PI) / 180
       const r = R * Math.cos(phi)
       const y = R * Math.sin(phi)
       const pts: THREE.Vector3[] = []
-      for (let t = 0; t <= 96; t++) {
-        const a = (t / 96) * Math.PI * 2
+      for (let t = 0; t <= 128; t++) {
+        const a = (t / 128) * Math.PI * 2
         pts.push(new THREE.Vector3(r * Math.cos(a), y, r * Math.sin(a)))
       }
       lat.push(new THREE.BufferGeometry().setFromPoints(pts))
     }
-    // longitude rings
-    for (let i = 0; i < 180; i += 15) {
+
+    // Longitude rings — sparse
+    for (let i = 0; i < 180; i += 30) {
       const theta = (i * Math.PI) / 180
       const pts: THREE.Vector3[] = []
-      for (let t = 0; t <= 96; t++) {
-        const a = (t / 96) * Math.PI * 2
+      for (let t = 0; t <= 128; t++) {
+        const a = (t / 128) * Math.PI * 2
         const x = R * Math.sin(a) * Math.cos(theta)
         const z = R * Math.sin(a) * Math.sin(theta)
         const y = R * Math.cos(a)
@@ -50,42 +105,124 @@ function WireGlobe() {
       }
       lon.push(new THREE.BufferGeometry().setFromPoints(pts))
     }
-    return { latLines: lat, lonLines: lon }
+
+    const hubVecs = HUBS.map(([la, lo]) => latLonToVec3(la, lo, R))
+    const arcGeos = ROUTES.map(([a, b]) => makeArc(hubVecs[a], hubVecs[b], R))
+
+    return { latLines: lat, lonLines: lon, arcs: arcGeos, hubPositions: hubVecs }
   }, [])
 
   return (
     <group ref={group}>
+      {/* Fine graticule */}
       {latLines.map((g, i) => (
         <line key={`lat-${i}`}>
           <primitive object={g} attach="geometry" />
-          <lineBasicMaterial
-            color={i === 5 ? ORANGE : ORANGE_DIM}
-            transparent
-            opacity={i === 5 ? 0.9 : 0.35}
-          />
+          <lineBasicMaterial color={GOLD_DIM} transparent opacity={0.4} />
         </line>
       ))}
       {lonLines.map((g, i) => (
         <line key={`lon-${i}`}>
           <primitive object={g} attach="geometry" />
-          <lineBasicMaterial color={ORANGE_DIM} transparent opacity={0.3} />
+          <lineBasicMaterial color={GOLD_DIM} transparent opacity={0.35} />
         </line>
       ))}
+
+      {/* Golden equator highlight */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[R, 0.0035, 8, 200]} />
+        <meshBasicMaterial color={GOLD} transparent opacity={0.85} />
+      </mesh>
+
+      {/* Flight arcs */}
+      {arcs.map((g, i) => (
+        <line key={`arc-${i}`}>
+          <primitive object={g} attach="geometry" />
+          <lineBasicMaterial color={GOLD} transparent opacity={0.7} />
+        </line>
+      ))}
+
+      {/* Hub markers */}
+      {hubPositions.map((p, i) => (
+        <mesh key={`hub-${i}`} position={p}>
+          <sphereGeometry args={[0.028, 12, 12]} />
+          <meshBasicMaterial color={IVORY} />
+        </mesh>
+      ))}
+
+      {/* Travelling lights along arcs */}
+      <ArcTravellers arcs={arcs} />
+
+      {/* Occluding inner sphere for depth */}
       <mesh>
-        <sphereGeometry args={[1.97, 48, 48]} />
-        <meshBasicMaterial color="#0a0e14" transparent opacity={0.85} />
+        <sphereGeometry args={[R - 0.02, 64, 64]} />
+        <meshBasicMaterial color="#0A0908" transparent opacity={0.92} />
+      </mesh>
+
+      {/* Soft outer halo */}
+      <mesh>
+        <sphereGeometry args={[R + 0.12, 64, 64]} />
+        <meshBasicMaterial
+          color={GOLD}
+          transparent
+          opacity={0.025}
+          side={THREE.BackSide}
+        />
       </mesh>
     </group>
   )
 }
 
-function Stars() {
+/** Small glowing points that travel smoothly along each arc */
+function ArcTravellers({ arcs }: { arcs: THREE.BufferGeometry[] }) {
+  const refs = useRef<(THREE.Mesh | null)[]>([])
+
+  const arcPoints = useMemo(
+    () =>
+      arcs.map((g) => {
+        const pos = g.getAttribute('position') as THREE.BufferAttribute
+        const pts: THREE.Vector3[] = []
+        for (let i = 0; i < pos.count; i++) {
+          pts.push(new THREE.Vector3().fromBufferAttribute(pos, i))
+        }
+        return pts
+      }),
+    [arcs]
+  )
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime
+    arcPoints.forEach((pts, i) => {
+      const mesh = refs.current[i]
+      if (!mesh || pts.length === 0) return
+      // Each traveller loops at a slightly different phase/speed
+      const progress = (t * 0.09 + i * 0.13) % 1
+      const idx = Math.min(Math.floor(progress * (pts.length - 1)), pts.length - 2)
+      const frac = progress * (pts.length - 1) - idx
+      mesh.position.lerpVectors(pts[idx], pts[idx + 1], frac)
+    })
+  })
+
+  return (
+    <>
+      {arcPoints.map((_, i) => (
+        <mesh key={`traveller-${i}`} ref={(el) => { refs.current[i] = el }}>
+          <sphereGeometry args={[0.022, 10, 10]} />
+          <meshBasicMaterial color={GOLD} />
+        </mesh>
+      ))}
+    </>
+  )
+}
+
+/** Sparse, slow-drifting champagne dust */
+function GoldDust() {
   const ref = useRef<THREE.Points>(null)
   const positions = useMemo(() => {
-    const n = 700
+    const n = 350
     const arr = new Float32Array(n * 3)
     for (let i = 0; i < n; i++) {
-      const r = 6 + Math.random() * 10
+      const r = 5 + Math.random() * 9
       const theta = Math.random() * Math.PI * 2
       const phi = Math.acos(2 * Math.random() - 1)
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta)
@@ -96,18 +233,15 @@ function Stars() {
   }, [])
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.008
+    if (ref.current) ref.current.rotation.y += delta * 0.004
   })
 
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.02} color="#8b98ab" transparent opacity={0.7} />
+      <pointsMaterial size={0.018} color={GOLD} transparent opacity={0.45} />
     </points>
   )
 }
@@ -115,13 +249,13 @@ function Stars() {
 export default function HeroScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0.4, 5.4], fov: 45 }}
-      dpr={[1, 1.5]}
+      camera={{ position: [0, 0.3, 5.6], fov: 42 }}
+      dpr={[1, 1.75]}
       gl={{ antialias: true, alpha: true }}
       aria-hidden="true"
     >
-      <WireGlobe />
-      <Stars />
+      <LuxGlobe />
+      <GoldDust />
     </Canvas>
   )
 }

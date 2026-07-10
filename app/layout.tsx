@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Antonio, Outfit, Playfair_Display } from 'next/font/google'
+import { Cormorant_Garamond, Outfit } from 'next/font/google'
 import './globals.css'
 
 const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
@@ -10,10 +10,11 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 })
 
-const antonio = Antonio({
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  variable: '--font-antonio',
-  weight: ['400', '700'],
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
 })
 
@@ -24,24 +25,16 @@ const outfit = Outfit({
   display: 'swap',
 })
 
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-})
-
 export const metadata: Metadata = {
-  title: 'AeroPilot — Your AI Air Travel Companion',
+  title: 'AeroPilot — Private Flight Intelligence',
   description:
-    'AI-powered flight search, live global air traffic, multi-city planning, and personalized travel intelligence.',
+    'AI-powered flight search, live global air traffic, multi-city planning, and personalized travel intelligence — crafted for travelers who demand more.',
   generator: 'v0.app',
 }
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#0a0e14',
+  themeColor: '#0A0908',
 }
 
 export default function RootLayout({
@@ -52,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark bg-background ${geistSans.variable} ${geistMono.variable} ${antonio.variable} ${outfit.variable} ${playfair.variable}`}
+      className={`dark bg-background ${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${outfit.variable}`}
     >
       <body className="font-sans antialiased">
         {children}

@@ -48,11 +48,11 @@ export function CustomCursor() {
       start + (end - start) * factor
 
     const animate = () => {
-      pos.current.x = lerp(pos.current.x, target.current.x, 0.15)
-      pos.current.y = lerp(pos.current.y, target.current.y, 0.15)
+      pos.current.x = lerp(pos.current.x, target.current.x, 0.12)
+      pos.current.y = lerp(pos.current.y, target.current.y, 0.12)
 
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${pos.current.x - 6}px, ${pos.current.y - 6}px)`
+        cursorRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px) translate(-50%, -50%)`
       }
       if (labelRef.current) {
         labelRef.current.style.transform = `translate(${pos.current.x + 20}px, ${pos.current.y - 10}px)`

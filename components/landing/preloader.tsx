@@ -3,79 +3,88 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap, useReducedMotion } from '@/lib/use-gsap'
 
-const BOOT_LINES = [
-  { text: 'INITIALIZING_AEROPILOT...', delay: 0 },
-  { text: '[CORE_SYSTEMS] ONLINE', delay: 0.6 },
-  { text: '[OPENSKY_FEED] CONNECTED', delay: 1.0 },
-  { text: '> "THE WORLD IS A BOOK,', delay: 1.5 },
-  { text: '  AND THOSE WHO DO NOT TRAVEL', delay: 1.8 },
-  { text: '  READ ONLY ONE PAGE."', delay: 2.1 },
-  { text: '', delay: 2.5 },
-  { text: 'YOUR AI TRAVEL COMPANION', delay: 2.6 },
-]
-
 export function Preloader() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const wordmarkRef = useRef<HTMLDivElement>(null)
+  const subRef = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(true)
-  const [visibleLines, setVisibleLines] = useState<number[]>([])
-  const [typingIndex, setTypingIndex] = useState(-1)
-  const [charCounts, setCharCounts] = useState<Record<number, number>>({})
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    // Prevent scroll during preloader
     document.body.style.overflow = 'hidden'
 
     if (reducedMotion) {
-      // Instant reveal
       const timer = setTimeout(() => {
         document.body.style.overflow = ''
         setVisible(false)
-      }, 500)
-      return () => clearTimeout(timer)
+      }, 400)
+      return () => {
+        clearTimeout(timer)
+        document.body.style.overflow = ''
+      }
     }
 
-    // Type each line sequentially
-    const timeouts: ReturnType<typeof setTimeout>[] = []
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          document.body.style.overflow = ''
+          setVisible(false)
+        },
+      })
 
-    BOOT_LINES.forEach((line, i) => {
-      // Show line and start typing
-      const showTimeout = setTimeout(() => {
-        setVisibleLines(prev => [...prev, i])
-        setTypingIndex(i)
-
-        // Type characters one by one
-        const chars = line.text.length
-        for (let c = 0; c <= chars; c++) {
-          const charTimeout = setTimeout(() => {
-            setCharCounts(prev => ({ ...prev, [i]: c }))
-          }, c * 25)
-          timeouts.push(charTimeout)
+      // Wordmark fades up softly
+      tl.fromTo(
+        wordmarkRef.current,
+        { opacity: 0, y: 24, letterSpacing: '0.6em' },
+        {
+          opacity: 1,
+          y: 0,
+          letterSpacing: '0.35em',
+          duration: 1.1,
+          ease: 'power3.out',
         }
-      }, line.delay * 1000)
-      timeouts.push(showTimeout)
-    })
+      )
 
-    // Wipe away after all lines typed
-    const wipeTimeout = setTimeout(() => {
-      if (containerRef.current) {
-        gsap.to(containerRef.current, {
+      // Sub-label follows
+      tl.fromTo(
+        subRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8, ease: 'power2.out' },
+        0.5
+      )
+
+      // Gold progress line fills
+      tl.fromTo(
+        lineRef.current,
+        { '--progress': 0 },
+        { '--progress': 1, duration: 1.2, ease: 'power2.inOut' },
+        0.4
+      )
+
+      // Elegant upward wipe
+      tl.to(
+        containerRef.current,
+        {
           clipPath: 'inset(0 0 100% 0)',
-          duration: 0.8,
+          duration: 1.1,
           ease: 'power4.inOut',
-          onComplete: () => {
-            document.body.style.overflow = ''
-            setVisible(false)
-          },
-        })
-      }
-    }, 3200)
-    timeouts.push(wipeTimeout)
+        },
+        1.7
+      )
+
+      // Content slides up slightly as the curtain lifts
+      tl.to(
+        [wordmarkRef.current, subRef.current, lineRef.current],
+        { y: -40, opacity: 0, duration: 0.8, ease: 'power3.in' },
+        1.6
+      )
+    }, containerRef)
 
     return () => {
-      timeouts.forEach(clearTimeout)
+      ctx.revert()
       document.body.style.overflow = ''
     }
   }, [reducedMotion])
@@ -89,36 +98,12 @@ export function Preloader() {
       style={{ clipPath: 'inset(0 0 0 0)' }}
       aria-hidden="true"
     >
-      <div className="flex flex-col gap-1 px-8 max-w-lg w-full">
-        {BOOT_LINES.map((line, i) => {
-          if (!visibleLines.includes(i)) return <div key={i} className="h-5" />
-
-          const displayChars = charCounts[i] ?? 0
-          const displayText = line.text.substring(0, displayChars)
-          const isLastLine = i === BOOT_LINES.length - 1
-          const isActive = isLastLine || line.text.startsWith('>')
-
-          return (
-            <div
-              key={i}
-              className={`preloader-text ${isActive ? 'active' : ''}`}
-            >
-              {displayText}
-              {typingIndex === i && displayChars < line.text.length && (
-                <span className="terminal-cursor" />
-              )}
-            </div>
-          )
-        })}
+      <div ref={wordmarkRef} className="preloader-wordmark">
+        AeroPilot
       </div>
-
-      {/* Red accent line */}
-      <div
-        className="absolute bottom-16 left-8 right-8 h-px"
-        style={{ background: '#E0201C', opacity: 0.6 }}
-      />
-      <div className="absolute bottom-8 left-8 micro-label" style={{ color: '#8A8A85' }}>
-        v0.1.0 — AEROPILOT
+      <div ref={lineRef} className="preloader-line" />
+      <div ref={subRef} className="preloader-sub">
+        Private Flight Intelligence
       </div>
     </div>
   )

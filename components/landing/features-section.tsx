@@ -3,43 +3,43 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { gsap, ScrollTrigger, useReducedMotion } from '@/lib/use-gsap'
+import { gsap, useReducedMotion } from '@/lib/use-gsap'
 
 const FEATURES = [
   {
     id: '01',
-    title: 'LIVE GLOBAL\nAIR TRAFFIC',
-    tags: ['real-time', '3d-globe', 'opensky'],
+    title: 'Live Global\nAir Traffic',
+    tags: ['real-time', '3d globe', 'opensky'],
     description:
-      'Real aircraft positions streamed from the OpenSky Network, rendered on an interactive 3D globe with dynamic flight path visualization.',
-    image: '/landing/feature-globe.png',
+      'Real aircraft positions streamed from the OpenSky Network, rendered on an interactive golden globe with graceful flight-path arcs.',
+    image: '/landing/lux-feature-globe.png',
     href: '/dashboard',
   },
   {
     id: '02',
-    title: 'SMART FLIGHT\nSEARCH',
-    tags: ['ai-search', '70+-airports', 'pricing'],
+    title: 'Smart Flight\nSearch',
+    tags: ['ai search', '70+ airports', 'pricing'],
     description:
       'Direct and connecting offers across 70+ major world airports with intelligent dynamic pricing and flexible date intelligence.',
-    image: '/landing/feature-search.png',
+    image: '/landing/lux-feature-search.png',
     href: '/dashboard',
   },
   {
     id: '03',
-    title: 'AI TRAVEL\nCOMPANION',
-    tags: ['streaming', 'tool-calls', 'copilot'],
+    title: 'AI Travel\nConcierge',
+    tags: ['streaming', 'tool calls', 'copilot'],
     description:
-      'A streaming chat copilot that searches, compares, and plans flights with live tool calls — your personal travel intelligence engine.',
-    image: '/landing/feature-ai-chat.png',
+      'A streaming chat concierge that searches, compares, and plans flights with live tool calls — your personal travel intelligence engine.',
+    image: '/landing/lux-feature-ai.png',
     href: '/chat',
   },
   {
     id: '04',
-    title: 'MULTI-CITY\nPLANNING',
-    tags: ['itineraries', 'per-leg', 'hub-routes'],
+    title: 'Multi-City\nPlanning',
+    tags: ['itineraries', 'per-leg', 'hub routes'],
     description:
       'Sequential itineraries with per-leg offers, automated totals, and plausible hub connections across the global network.',
-    image: '/landing/feature-multicity.png',
+    image: '/landing/lux-feature-multicity.png',
     href: '/trips',
   },
 ]
@@ -59,7 +59,6 @@ export function FeaturesSection() {
       const slides = slidesContainerRef.current!.children
 
       if (reducedMotion) {
-        // No pin/scrub — just fade in each slide
         Array.from(slides).forEach((slide) => {
           gsap.from(slide, {
             opacity: 0,
@@ -75,12 +74,12 @@ export function FeaturesSection() {
         return
       }
 
-      // Pin the section and scrub through slides
+      // Pin the section and scrub through slides — higher scrub value for silkier catch-up
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
-          scrub: 1,
+          scrub: 1.8,
           start: 'top top',
           end: () => `+=${window.innerHeight * totalSlides}`,
           onUpdate: (self) => {
@@ -90,7 +89,6 @@ export function FeaturesSection() {
             )
             setActiveIndex(idx)
 
-            // Update progress bar
             if (progressRef.current) {
               progressRef.current.style.setProperty(
                 '--progress',
@@ -101,7 +99,6 @@ export function FeaturesSection() {
         },
       })
 
-      // Animate through slides
       for (let i = 0; i < totalSlides; i++) {
         const slide = slides[i] as HTMLElement
         if (!slide) continue
@@ -109,8 +106,8 @@ export function FeaturesSection() {
         if (i > 0) {
           tl.fromTo(
             slide,
-            { opacity: 0, y: 60 },
-            { opacity: 1, y: 0, duration: 0.5 },
+            { opacity: 0, y: 50, scale: 0.985 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power2.out' },
             i
           )
         }
@@ -118,18 +115,18 @@ export function FeaturesSection() {
         if (i < totalSlides - 1) {
           tl.to(
             slide,
-            { opacity: 0, y: -60, duration: 0.5 },
-            i + 0.7
+            { opacity: 0, y: -50, scale: 0.985, duration: 0.55, ease: 'power2.in' },
+            i + 0.72
           )
         }
 
-        // Parallax on the image inside the slide
+        // Gentle parallax on the image inside the slide
         const img = slide.querySelector('.feature-image')
         if (img) {
           tl.fromTo(
             img,
-            { y: '15%', scale: 1.05 },
-            { y: '-15%', scale: 1, duration: 1 },
+            { y: '10%', scale: 1.06 },
+            { y: '-10%', scale: 1, duration: 1, ease: 'none' },
             i
           )
         }
@@ -139,7 +136,7 @@ export function FeaturesSection() {
     return () => ctx.revert()
   }, [reducedMotion])
 
-  // 3D tilt on hover for cards
+  // Subtle 3D tilt on hover
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reducedMotion) return
     const card = e.currentTarget
@@ -150,7 +147,7 @@ export function FeaturesSection() {
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
 
-    inner.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`
+    inner.style.transform = `rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -161,20 +158,18 @@ export function FeaturesSection() {
   }
 
   return (
-    <section ref={sectionRef} className="section-dark relative overflow-hidden" style={{ minHeight: '100vh' }}>
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-center bg-cover opacity-[0.03]"
-        style={{ backgroundImage: 'url(/landing/feature-globe.png)', filter: 'blur(30px)' }}
-        aria-hidden="true"
-      />
-
+    <section
+      ref={sectionRef}
+      className="section-dark relative overflow-hidden"
+      style={{ minHeight: '100vh' }}
+    >
       <div className="relative z-10 h-screen flex flex-col">
         {/* Top micro-label */}
-        <div className="pt-20 px-6 md:px-12 lg:px-20">
-          <p className="micro-label" style={{ color: '#8A8A85' }}>
+        <div className="pt-20 px-6 md:px-12 lg:px-20 flex items-center gap-6">
+          <p className="micro-label" style={{ color: '#C9A96A' }}>
             CAPABILITIES
           </p>
+          <div className="gold-hairline flex-1 max-w-xs" aria-hidden="true" />
         </div>
 
         {/* Slides container */}
@@ -189,46 +184,68 @@ export function FeaturesSection() {
                   ? ''
                   : 'opacity-0'
               }`}
-              style={reducedMotion ? { position: 'relative', height: 'auto', minHeight: '80vh' } : {}}
+              style={
+                reducedMotion
+                  ? { position: 'relative', height: 'auto', minHeight: '80vh' }
+                  : {}
+              }
             >
-              <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
                 {/* Media card - left */}
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-6">
                   <div
-                    className="tilt-card relative overflow-hidden"
+                    className="tilt-card relative"
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                     data-cursor-label="explore"
                   >
-                    <div className="tilt-card-inner aspect-[4/5] md:aspect-[3/4] relative overflow-hidden">
-                      <Image
-                        src={feature.image}
-                        alt={feature.title.replace('\n', ' ')}
-                        fill
-                        className="feature-image object-cover"
-                        style={{ willChange: 'transform' }}
-                      />
-                    </div>
-
-                    {/* Giant overlapping title */}
-                    <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 z-20">
-                      <h3
-                        className="font-bold leading-[0.85] uppercase whitespace-pre-line"
-                        style={{
-                          fontFamily: 'var(--font-display)',
-                          fontSize: 'clamp(2.5rem, 7vw, 7rem)',
-                          color: '#E8E6E1',
-                          textShadow: '0 2px 40px rgba(0,0,0,0.6)',
-                        }}
-                      >
-                        {feature.title}
-                      </h3>
+                    <div className="tilt-card-inner corner-marks">
+                      <div className="aspect-[4/5] md:aspect-[3/4] relative overflow-hidden">
+                        <Image
+                          src={feature.image}
+                          alt={feature.title.replace('\n', ' ')}
+                          fill
+                          className="feature-image object-cover"
+                          style={{ willChange: 'transform' }}
+                        />
+                        {/* Soft vignette for depth */}
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{
+                            background:
+                              'linear-gradient(to top, rgba(10,9,8,0.55) 0%, transparent 40%)',
+                          }}
+                          aria-hidden="true"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Info column - right */}
-                <div className="lg:col-span-5 flex flex-col gap-6">
+                <div className="lg:col-span-6 flex flex-col gap-7">
+                  {/* Index */}
+                  <span
+                    className="serif-accent text-2xl"
+                    style={{ color: '#C9A96A' }}
+                  >
+                    No. {feature.id}
+                  </span>
+
+                  {/* Title */}
+                  <h3
+                    className="whitespace-pre-line text-balance"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(2.5rem, 5.5vw, 5.5rem)',
+                      fontWeight: 500,
+                      lineHeight: 1,
+                      color: '#F4F1EA',
+                    }}
+                  >
+                    {feature.title}
+                  </h3>
+
                   {/* Tags */}
                   <div className="flex flex-wrap gap-3">
                     {feature.tags.map((tag) => (
@@ -236,8 +253,8 @@ export function FeaturesSection() {
                         key={tag}
                         className="micro-label pb-1"
                         style={{
-                          color: '#8A8A85',
-                          borderBottom: '1px solid rgba(138, 138, 133, 0.4)',
+                          color: '#8A8378',
+                          borderBottom: '1px solid rgba(201, 169, 106, 0.35)',
                         }}
                       >
                         {tag}
@@ -247,18 +264,19 @@ export function FeaturesSection() {
 
                   {/* Description */}
                   <p
-                    className="text-base md:text-lg leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)', color: '#E8E6E1', opacity: 0.8 }}
+                    className="text-base md:text-lg leading-relaxed max-w-md"
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      color: '#F4F1EA',
+                      opacity: 0.72,
+                      fontWeight: 300,
+                    }}
                   >
                     {feature.description}
                   </p>
 
                   {/* CTA Button */}
-                  <Link
-                    href={feature.href}
-                    className="editorial-btn self-start"
-                    style={{ color: '#E8E6E1', borderColor: 'rgba(232, 230, 225, 0.4)' }}
-                  >
+                  <Link href={feature.href} className="editorial-btn self-start">
                     <span>EXPLORE FEATURE</span>
                     <span className="arrow">↗</span>
                   </Link>
@@ -272,9 +290,9 @@ export function FeaturesSection() {
         <div className="px-6 md:px-12 lg:px-20 pb-8 flex items-center gap-6">
           <span
             className="micro-label"
-            style={{ color: '#8A8A85', fontFamily: 'var(--font-geist-mono), monospace' }}
+            style={{ color: '#8A8378' }}
           >
-            [ {String(activeIndex + 1).padStart(2, '0')} / {String(FEATURES.length).padStart(2, '0')} ]
+            {String(activeIndex + 1).padStart(2, '0')} — {String(FEATURES.length).padStart(2, '0')}
           </span>
 
           <div ref={progressRef} className="scroll-progress-bar flex-1" />

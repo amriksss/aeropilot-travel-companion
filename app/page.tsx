@@ -1,7 +1,6 @@
 import { SmoothScrollProvider } from '@/components/landing/smooth-scroll-provider'
 import { Preloader } from '@/components/landing/preloader'
 import { CustomCursor } from '@/components/landing/custom-cursor'
-import { FilmGrain } from '@/components/landing/film-grain'
 import { HudFrame } from '@/components/landing/hud-frame'
 import { HeroSection } from '@/components/landing/hero-section'
 import { StatsSection } from '@/components/landing/stats-section'
@@ -13,7 +12,6 @@ export default function LandingPage() {
     <SmoothScrollProvider>
       <Preloader />
       <CustomCursor />
-      <FilmGrain />
       <HudFrame />
 
       <main>
