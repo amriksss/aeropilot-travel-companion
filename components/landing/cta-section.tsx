@@ -157,7 +157,7 @@ export function CtaSection() {
             </p>
 
             {/* Oversized link list */}
-            <div className="flex flex-col gap-0">
+            <div className="liquid-glass liquid-glass--light flex flex-col gap-0 px-6 md:px-8 py-2">
               {LINKS.map((link, i) => (
                 <Link
                   key={link.label}
@@ -219,8 +219,8 @@ export function CtaSection() {
 
           {/* Right: Editorial image */}
           <div className="lg:col-span-5">
-            <div ref={imageRef} className="corner-marks">
-              <div className="lux-frame">
+            <div ref={imageRef} className="corner-marks liquid-glass liquid-glass--light p-3">
+              <div className="lux-frame rounded-sm overflow-hidden">
                 <Image
                   src="/landing/lux-cta.png"
                   alt="Private jet on a runway at night under golden lights"

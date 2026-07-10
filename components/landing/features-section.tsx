@@ -165,8 +165,8 @@ export function FeaturesSection() {
                   onMouseLeave={handleMouseLeave}
                   data-cursor-label="explore"
                 >
-                  <div className="tilt-card-inner corner-marks">
-                    <div className="aspect-[4/5] md:aspect-[3/4] relative overflow-hidden">
+                  <div className="tilt-card-inner corner-marks liquid-glass p-3">
+                    <div className="aspect-[4/5] md:aspect-[3/4] relative overflow-hidden rounded-sm">
                       <Image
                         src={feature.image}
                         alt={feature.title.replace('\n', ' ')}
@@ -221,11 +221,8 @@ export function FeaturesSection() {
                   {feature.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="micro-label pb-1"
-                      style={{
-                        color: '#8A8378',
-                        borderBottom: '1px solid rgba(201, 169, 106, 0.35)',
-                      }}
+                      className="glass-pill micro-label"
+                      style={{ color: '#C9A96A' }}
                     >
                       {tag}
                     </span>

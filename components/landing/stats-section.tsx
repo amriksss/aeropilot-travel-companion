@@ -75,13 +75,12 @@ export function StatsSection() {
         </p>
         <div className="gold-hairline mb-16 max-w-xs mx-auto" aria-hidden="true" />
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-5">
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
               ref={(el) => { rowRefs.current[i] = el }}
-              className="py-10 md:py-14 flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8"
-              style={{ borderTop: '1px solid rgba(138, 131, 120, 0.18)' }}
+              className="liquid-glass px-8 md:px-12 py-9 md:py-11 flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8"
             >
               {/* Number + suffix */}
               <div className="flex items-baseline gap-1 md:w-56 flex-shrink-0">
@@ -114,8 +113,6 @@ export function StatsSection() {
               </div>
             </div>
           ))}
-
-          <div style={{ borderTop: '1px solid rgba(138, 131, 120, 0.18)' }} />
         </div>
       </div>
     </section>

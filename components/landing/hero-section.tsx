@@ -197,9 +197,14 @@ export function HeroSection() {
 
         <div
           ref={metaRef}
-          className="mt-10 micro-label"
-          style={{ color: '#8A8378' }}
+          className="mt-10 glass-pill micro-label"
+          style={{ color: '#C9A96A' }}
         >
+          <span
+            className="animate-pulse-dot inline-block w-1.5 h-1.5 rounded-full"
+            style={{ background: '#C9A96A' }}
+            aria-hidden="true"
+          />
           LIVE DATA · OPENSKY NETWORK · 70+ AIRPORTS
         </div>
       </div>

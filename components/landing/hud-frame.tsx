@@ -74,7 +74,7 @@ export function HudFrame() {
     <div className="hud-frame" aria-hidden="false">
       {/* Top bar */}
       <div
-        className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-3"
+        className="liquid-glass-bar absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-3"
         style={{ borderBottom: '1px solid rgba(201, 169, 106, 0.18)' }}
       >
         <span className="hud-bar">MMXXVI</span>
@@ -84,7 +84,7 @@ export function HudFrame() {
 
       {/* Bottom bar */}
       <div
-        className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-3"
+        className="liquid-glass-bar absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-3"
         style={{ borderTop: '1px solid rgba(201, 169, 106, 0.18)' }}
       >
         <span className="hud-bar">v0.1.0</span>
