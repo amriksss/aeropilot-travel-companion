@@ -1,0 +1,471 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── EDITORIAL DESIGN TOKENS ─── */
+@theme inline {
+  /* Existing app fonts */
+  --font-sans: var(--font-geist-sans), 'Geist', sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', monospace;
+
+  /* Editorial fonts */
+  --font-display: var(--font-antonio), 'Antonio', sans-serif;
+  --font-body: var(--font-outfit), 'Outfit', sans-serif;
+  --font-serif: var(--font-playfair), 'Playfair Display', serif;
+
+  /* Editorial palette */
+  --color-paper: #E8E6E1;
+  --color-ink: #0C0C0C;
+  --color-red-accent: #E0201C;
+  --color-gray-muted: #8A8A85;
+
+  /* Existing shadcn tokens */
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/*
+  Editorial palette — unified across entire app
+  paper #E8E6E1, ink #0C0C0C, red #E0201C, gray #8A8A85
+*/
+:root,
+.dark {
+  color-scheme: dark;
+  --background: #0C0C0C;
+  --foreground: #E8E6E1;
+  --card: #0C0C0C;
+  --card-foreground: #E8E6E1;
+  --popover: #111111;
+  --popover-foreground: #E8E6E1;
+  --primary: #E0201C;
+  --primary-foreground: #E8E6E1;
+  --secondary: rgba(232, 230, 225, 0.05);
+  --secondary-foreground: #E8E6E1;
+  --muted: rgba(232, 230, 225, 0.05);
+  --muted-foreground: #8A8A85;
+  --accent: rgba(232, 230, 225, 0.05);
+  --accent-foreground: #E0201C;
+  --destructive: #ef4444;
+  --border: rgba(138, 138, 133, 0.15);
+  --input: rgba(138, 138, 133, 0.2);
+  --ring: #E0201C;
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ─── EXISTING ANIMATIONS ─── */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EDITORIAL LANDING PAGE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── DISPLAY TYPOGRAPHY ─── */
+.text-display {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 14vw, 16rem);
+  line-height: 0.85;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-display-sm {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 8rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.micro-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+}
+
+.serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ─── DOT-MATRIX TEXTURE ─── */
+.dot-matrix {
+  background-image: radial-gradient(circle, #0C0C0C 0.5px, transparent 0.5px);
+  background-size: 12px 12px;
+  opacity: 0.03;
+}
+
+/* ─── FILM GRAIN OVERLAY ─── */
+@keyframes grain-drift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(3%, 1%); }
+  30% { transform: translate(-1%, 2%); }
+  40% { transform: translate(2%, -2%); }
+  50% { transform: translate(-3%, 3%); }
+  60% { transform: translate(1%, -1%); }
+  70% { transform: translate(-2%, 2%); }
+  80% { transform: translate(3%, -3%); }
+  90% { transform: translate(-1%, 1%); }
+}
+
+.film-grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 30;
+  mix-blend-mode: overlay;
+  opacity: 0.045;
+  animation: grain-drift 8s steps(10) infinite;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── PRELOADER ─── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0C0C0C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.preloader-text {
+  font-family: var(--font-geist-mono), 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #8A8A85;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.preloader-text.active {
+  color: #E8E6E1;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.1em;
+  background: #E0201C;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background: #0C0C0C;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              height 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              background 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.custom-cursor.hovering {
+  width: 60px;
+  height: 60px;
+  background: #E8E6E1;
+}
+
+.custom-cursor-label {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #E8E6E1;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+.custom-cursor-label.visible {
+  opacity: 1;
+}
+
+/* ─── HUD FRAME ─── */
+.hud-frame {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.hud-bar {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #8A8A85;
+}
+
+.hud-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #8A8A85;
+  white-space: nowrap;
+}
+
+.hud-vertical-left {
+  transform: rotate(180deg);
+}
+
+/* ─── TEXT REVEAL MASKS ─── */
+.word-mask {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.word-mask > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.line-mask > span {
+  display: block;
+  will-change: transform;
+}
+
+/* ─── EDITORIAL LINKS ─── */
+.editorial-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.editorial-link:hover::after {
+  transform: translateX(0);
+}
+
+/* ─── EDITORIAL BUTTON ─── */
+.editorial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.75rem;
+  border: 1px solid currentColor;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  transition: background 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+
+.editorial-btn:hover {
+  background: currentColor;
+}
+
+.editorial-btn:hover span {
+  /* This gets inverted via JS or mix-blend-mode */
+  filter: invert(1);
+}
+
+.editorial-btn .arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.editorial-btn:hover .arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ─── CORNER MARKS ─── */
+.corner-marks {
+  position: relative;
+}
+
+.corner-marks::before,
+.corner-marks::after {
+  content: '+';
+  position: absolute;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: #8A8A85;
+  line-height: 1;
+}
+
+.corner-marks::before {
+  top: -0.5rem;
+  left: -0.5rem;
+}
+
+.corner-marks::after {
+  bottom: -0.5rem;
+  right: -0.5rem;
+}
+
+/* ─── PROGRESS BAR ─── */
+.scroll-progress-bar {
+  height: 2px;
+  background: #8A8A85;
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-progress-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #E0201C;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: none;
+}
+
+/* ─── SECTION BACKGROUNDS ─── */
+.section-light {
+  background-color: #E8E6E1;
+  color: #0C0C0C;
+  position: relative;
+}
+
+.section-dark {
+  background-color: #0C0C0C;
+  color: #E8E6E1;
+  position: relative;
+}
+
+/* ─── 3D TILT CARD ─── */
+.tilt-card {
+  perspective: 1000px;
+}
+
+.tilt-card-inner {
+  transition: transform 0.15s ease-out, filter 0.6s ease;
+  will-change: transform;
+  filter: grayscale(100%);
+}
+
+.tilt-card:hover .tilt-card-inner {
+  filter: grayscale(0%);
+}
+
+/* ─── SCRAMBLE TEXT ─── */
+.scramble-char {
+  display: inline-block;
+  transition: none;
+}
+
+/* ─── REDUCED MOTION ─── */
+@media (prefers-reduced-motion: reduce) {
+  .film-grain {
+    animation: none;
+  }
+
+  .word-mask > span,
+  .line-mask > span {
+    will-change: auto;
+    transform: none !important;
+  }
+
+  .tilt-card-inner {
+    will-change: auto;
+    transition: filter 0.3s ease;
+  }
+
+  .editorial-link::after {
+    transition: none;
+  }
+
+  .custom-cursor,
+  .custom-cursor-label {
+    display: none;
+  }
+}
